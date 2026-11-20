@@ -3,6 +3,9 @@ name: wallpaper
 on:
   # 정시 실행은 Home Assistant 가 repository_dispatch 로 호출한다(04:10 낮 그림 / 16:10 밤 그림).
   # GitHub 의 schedule 은 이 계정에서 몇 시간씩 늦어져 쓰지 않는다.
+  schedule:
+    - cron: '10 19 * * *'
+    - cron: '10 7 * * *'
   repository_dispatch:
     types: [wallpaper-update]
   workflow_dispatch:
