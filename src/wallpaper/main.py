@@ -91,7 +91,7 @@ def run(
     slot: str,
     *,
     fetch_condition=weather.fetch_condition,
-    fetch_recent=history.fetch_recent_ids,
+    fetch_history=history.fetch_history,
     generate=cf_client.generate_image,
     notify=notifier.notify_failure,
     rng: random.Random | None = None,
@@ -99,8 +99,17 @@ def run(
     """Generate one wallpaper. `now` must be in KST. Returns the process exit code."""
     today = now.date()
     rng = rng or random.SystemRandom()
+
     spots = spot_selector.load_spots(settings.spots_path)
-    recent = fetch_recent(settings.latest_json_url) if settings.latest_json_url else []
+
+    previous = (
+        fetch_history(settings.latest_json_url)
+        if settings.latest_json_url
+        else {}
+    )
+    recent = previous.get(history.HISTORY_KEY, [])
+    previous_style = previous.get(history.STYLE_KEY)
+
     spot = spot_selector.choose_spot(spots, recent, rng)
     seed = rng.randrange(_SEED_LIMIT)
 
@@ -110,12 +119,30 @@ def run(
     )
 
     season = prompt_builder.season_of(today)
-    prompt = prompt_builder.build_prompt(spot, slot, season, condition)
+    prompt = prompt_builder.build_prompt(
+        spot,
+        slot,
+        season,
+        condition,
+        previous_style=previous_style,
+        rng=rng,
+    )
+
+    # Identify the selected style from the generated prompt.
+    style = next(
+        (
+            name
+            for name, phrase in prompt_builder.STYLES.items()
+            if phrase in prompt
+        ),
+        None,
+    )
 
     logger.info(
-        "slot=%s spot=%s weather=%s location=%.4f,%.4f season=%s",
+        "slot=%s spot=%s style=%s weather=%s location=%.4f,%.4f season=%s",
         slot,
         spot.id,
+        style,
         condition,
         settings.weather_latitude,
         settings.weather_longitude,
@@ -149,6 +176,8 @@ def run(
             "spot_id": spot.id,
             "spot_name_ko": spot.name_ko,
             "spot_area": spot.area,
+            "style": style,
+            history.STYLE_KEY: style,
             "season": season,
             "weather": condition,
             "weather_latitude": settings.weather_latitude,
