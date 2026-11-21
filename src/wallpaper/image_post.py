@@ -16,7 +16,7 @@ class ImageProcessingError(RuntimeError):
 def to_wallpaper(raw: bytes, width: int, height: int) -> bytes:
     try:
         with Image.open(io.BytesIO(raw)) as source:
-            image = source.convert("L")
+            image = source.convert("RGB")
     except (UnidentifiedImageError, OSError) as exc:
         raise ImageProcessingError("generated data is not a valid image") from exc
 
