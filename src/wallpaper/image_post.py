@@ -1,4 +1,5 @@
-"""Turn the raw generated image into an iPhone-sized grayscale JPEG (trim, cover-fit, crop)."""
+
+"""Turn the raw generated image into an iPhone-sized color JPEG (trim, cover-fit, crop)."""
 
 import io
 
@@ -32,7 +33,6 @@ def to_wallpaper(raw: bytes, width: int, height: int) -> bytes:
     top = (resized.height - height) // 2
     cropped = resized.crop((left, top, left + width, top + height))
 
-    # Saved as 3-channel JPEG (neutral chroma costs almost nothing) for maximum iOS compatibility.
     output = io.BytesIO()
-    cropped.convert("RGB").save(output, format="JPEG", quality=JPEG_QUALITY, optimize=True)
+    cropped.save(output, format="JPEG", quality=JPEG_QUALITY, optimize=True)
     return output.getvalue()
