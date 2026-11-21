@@ -1,46 +1,68 @@
 
-"""Build varied, weather-aware image prompts for daily wallpapers."""
+"""Build varied, colorful, weather-aware prompts for daily smartphone wallpapers."""
 
 import random
 from datetime import date
 
 from .spot_selector import Spot
 
+
 STYLES = {
     "landscape": (
-        "Photorealistic landscape photography, breathtaking natural scenery, "
-        "realistic camera details, beautiful atmospheric lighting, rich natural colors, "
-        "professional travel photography."
+        "Premium photorealistic landscape photography, breathtaking natural scenery, "
+        "cinematic composition, realistic camera details, rich vivid natural colors, "
+        "beautiful atmospheric lighting, deep blues, emerald greens and warm golden tones. "
+        "Create a sophisticated and visually immersive scene."
     ),
     "animal": (
-        "A beautiful animal as the main subject, lifelike fur or feather details, "
-        "natural behavior, expressive eyes, beautifully composed wildlife photography, "
-        "soft realistic lighting, high photographic quality."
+        "High-quality colorful wildlife and nature photography. Feature a charming, "
+        "adorable animal with realistic anatomy, detailed natural fur or feathers, "
+        "and a gentle expressive personality. The animal should look naturally cute, "
+        "not cartoonish or childish. Use rich natural colors and beautiful cinematic light. "
+        "Show the animal's full body or at least most of its body in its environment. "
+        "The animal should occupy approximately 30 to 50 percent of the image. "
+        "Never use an extreme close-up, face-only portrait, or oversized head."
     ),
     "aesthetic": (
-        "A visually stunning artistic scene, imaginative composition, vibrant harmonious "
-        "colors, dreamy atmosphere, beautiful light and shadows, refined color grading, "
-        "creative fine-art photography."
+        "Sophisticated contemporary digital art and fine-art visual design. "
+        "Creative surrealism, cinematic 3D art, imaginative architecture, "
+        "abstract forms, futuristic scenery and artistic landscapes. "
+        "Use bold yet harmonious colors, deep blue, emerald, charcoal, orange, "
+        "violet and tasteful contrasting accents. "
+        "A refined, modern, visually striking atmosphere, not overly cute or childish."
     ),
 }
 
+# Approximate distribution: landscape 40%, animal 30%, aesthetic 30%.
 _STYLE_WEIGHTS = {
-    "landscape": 5,
+    "landscape": 4,
     "animal": 3,
-    "aesthetic": 2,
+    "aesthetic": 3,
 }
 
 _SEASON_PHRASES = {
-    "spring": "spring atmosphere, fresh green leaves, delicate blossoms and gentle sunlight",
-    "summer": "summer atmosphere, lush green nature, vivid colors and warm sunlight",
-    "autumn": "autumn atmosphere, golden and red foliage, warm rich colors",
-    "winter": "winter atmosphere, crisp air, snowy scenery and beautiful cool tones",
+    "spring": (
+        "spring atmosphere, fresh green leaves, blooming trees, "
+        "clear gentle sunlight and lively natural colors"
+    ),
+    "summer": (
+        "summer atmosphere, lush green nature, vivid colors, "
+        "bright sunlight and refreshing scenery"
+    ),
+    "autumn": (
+        "autumn atmosphere, golden and red foliage, "
+        "warm rich colors and crisp air"
+    ),
+    "winter": (
+        "winter atmosphere, beautiful snow, crisp air, "
+        "cool blue tones and peaceful winter scenery"
+    ),
 }
 
 _TIME_PHRASES = {
     "day": (
         "daytime lighting, natural sunlight, clear visual details, "
-        "balanced exposure and beautiful bright colors"
+        "balanced exposure and beautiful vibrant colors"
     ),
     "night": (
         "nighttime atmosphere, cinematic low-light photography, "
@@ -55,14 +77,14 @@ _WEATHER_PHRASES = {
     },
     "partly_cloudy": {
         "day": "beautiful scattered clouds and soft sunlight",
-        "night": "a partly cloudy sky with moonlight between the clouds",
+        "night": "partly cloudy sky with moonlight between the clouds",
     },
     "overcast": {
-        "day": "soft diffused daylight, dramatic cloudy sky and muted atmosphere",
+        "day": "dramatic cloudy sky and soft diffused daylight",
         "night": "cloudy night sky and atmospheric low-light scenery",
     },
     "fog": {
-        "day": "mysterious morning mist, atmospheric fog and soft diffused light",
+        "day": "mysterious morning mist, atmospheric fog and soft light",
         "night": "dreamlike night fog and mysterious atmospheric lighting",
     },
     "rain": {
@@ -71,7 +93,7 @@ _WEATHER_PHRASES = {
     },
     "snow": {
         "day": "beautiful snowfall, fresh white snow and soft winter light",
-        "night": "snow falling under gentle nighttime lights",
+        "night": "snow falling under beautiful nighttime lights",
     },
     "thunderstorm": {
         "day": "dramatic storm clouds, powerful rain and cinematic atmosphere",
@@ -129,17 +151,29 @@ def build_prompt(
     )
 
     if style_name == "landscape":
-        subject = f"Scene: {spot.visual}."
+        subject = (
+            f"Scene: {spot.visual}. "
+            "Show a wide, immersive view of the surrounding environment. "
+            "The scenery is the main subject, not a close-up object."
+        )
     elif style_name == "animal":
         subject = (
-            "Create a beautiful animal-centered scene. Choose an animal and natural "
-            "environment that fit the current season and weather. Do not include a "
-            "human or a city as the main subject."
+            "Create a charming wildlife scene. Choose an appealing animal such as "
+            "a fox, red panda, otter, rabbit, squirrel, cat, dog, deer or other "
+            "interesting animal. Vary the animal between generations. "
+            "Show it naturally walking, sitting, playing, exploring or resting "
+            "in a beautiful environment such as a forest, meadow, riverside or snowy landscape. "
+            "Include plenty of visible scenery around the animal. "
+            "Avoid extreme close-ups, face-only portraits and studio backgrounds."
         )
     else:
         subject = (
-            "Create an original visually captivating scene inspired by the current "
-            "season and weather. Use an imaginative subject and artistic composition."
+            "Create an original artistic wallpaper with a strong visual concept. "
+            "Explore imaginative landscapes, surreal architecture, futuristic cities, "
+            "cinematic 3D environments, abstract geometry or visually striking natural forms. "
+            "Use a sophisticated and balanced color palette. "
+            "Avoid overly feminine decorations, excessive pink, excessive pastel colors, "
+            "floral patterns and childish cartoon aesthetics."
         )
 
     return (
@@ -147,8 +181,13 @@ def build_prompt(
         f"Season: {season_phrase}. "
         f"Weather: {weather_phrase}. "
         f"Time: {time_phrase}. "
-        "Vertical smartphone wallpaper composition, edge-to-edge image, "
-        "high detail, beautiful professional quality. "
+        "Vertical 9:16 smartphone wallpaper composition. "
+        "Carefully balanced composition with some calm visual space near the top "
+        "for the phone clock and notifications. "
+        "The main subject must be clearly visible without filling the entire frame. "
+        "Full color image only. Absolutely no black and white, monochrome, "
+        "grayscale, ink wash or desaturated treatment. "
+        "High detail, beautiful professional quality. "
         "No text, no letters, no watermark, no logo, no borders."
     )
 
