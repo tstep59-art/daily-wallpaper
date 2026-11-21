@@ -1,22 +1,33 @@
+
 name: wallpaper
 
 on:
-  # 정시 실행은 Home Assistant 가 repository_dispatch 로 호출한다(04:10 낮 그림 / 16:10 밤 그림).
-  # GitHub 의 schedule 은 이 계정에서 몇 시간씩 늦어져 쓰지 않는다.
+  # 기존 자동 실행은 새 방식이 정상 작동할 때까지 유지
   schedule:
     - cron: '10 19 * * *'
     - cron: '10 7 * * *'
+
+  # 아이폰 단축어에서 이미지 생성 요청
   repository_dispatch:
     types: [wallpaper-update]
+
+  # GitHub에서 수동 실행
   workflow_dispatch:
     inputs:
       slot:
-        description: "생성할 시간대 (auto 는 한국 시각 12시 이전이면 day, 이후면 night)"
+        description: "생성할 시간대"
         type: choice
         options: [auto, day, night]
         default: auto
+      latitude:
+        description: "위도 (선택)"
+        type: string
+        default: ""
+      longitude:
+        description: "경도 (선택)"
+        type: string
+        default: ""
 
-# 겹쳐 실행되어 배포가 뒤섞이지 않도록 한 번에 하나만 돌린다.
 concurrency:
   group: wallpaper
   cancel-in-progress: false
@@ -28,25 +39,30 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
       - uses: actions/checkout@v7
+
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
+
       - run: pip install -r requirements.txt
+
       - name: Generate wallpaper
         env:
           PYTHONPATH: src
-          # 외부 호출에는 입력값이 없어 auto: 한국 시각 12시 이전이면 낮, 이후면 밤.
-          SLOT: ${{ inputs.slot || 'auto' }}
+          SLOT: ${{ github.event.client_payload.slot || inputs.slot || 'auto' }}
+          WEATHER_LATITUDE: ${{ github.event.client_payload.latitude || inputs.latitude || '37.5665' }}
+          WEATHER_LONGITUDE: ${{ github.event.client_payload.longitude || inputs.longitude || '126.9780' }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           WALLPAPER_MODEL: ${{ vars.WALLPAPER_MODEL }}
-          # 직전 실행이 쓴 명승지 기록(latest.json 의 recent_spot_ids)을 읽어 겹치지 않게 고른다.
           LATEST_JSON_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/latest.json
         run: python -m wallpaper.main --slot "$SLOT" --out site
+
       - uses: actions/upload-pages-artifact@v5
         with:
           path: site
@@ -60,6 +76,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
