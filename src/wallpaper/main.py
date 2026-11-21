@@ -1,3 +1,4 @@
+
 """Entry point: pick a spot, read the weather, generate the image, save it for GitHub Pages."""
 
 import argparse
@@ -26,7 +27,6 @@ from .config import (
 logger = logging.getLogger(__name__)
 
 DEFAULT_SPOTS_PATH = Path(__file__).resolve().parents[2] / "data" / "spots.json"
-# Runs before noon (KST) are the daytime wallpaper, later runs the night one.
 _NIGHT_STARTS_AT_HOUR = 12
 _SEED_LIMIT = 1_000_000_000
 
@@ -44,12 +44,26 @@ class Settings:
     latest_json_url: str | None
     spots_path: Path
     out_dir: Path
+    weather_latitude: float
+    weather_longitude: float
 
 
 def load_settings(env, spots_path: Path, out_dir: Path) -> Settings:
     missing = [name for name in ("CF_ACCOUNT_ID", "CF_API_TOKEN") if not env.get(name)]
     if missing:
         raise ConfigError(f"missing environment variables: {', '.join(missing)}")
+
+    try:
+        latitude = float(env.get("WEATHER_LATITUDE") or SEOUL_LATITUDE)
+        longitude = float(env.get("WEATHER_LONGITUDE") or SEOUL_LONGITUDE)
+    except (TypeError, ValueError):
+        raise ConfigError("weather latitude and longitude must be numbers")
+
+    if not -90 <= latitude <= 90:
+        raise ConfigError("weather latitude must be between -90 and 90")
+    if not -180 <= longitude <= 180:
+        raise ConfigError("weather longitude must be between -180 and 180")
+
     return Settings(
         account_id=env["CF_ACCOUNT_ID"],
         api_token=env["CF_API_TOKEN"],
@@ -58,6 +72,8 @@ def load_settings(env, spots_path: Path, out_dir: Path) -> Settings:
         latest_json_url=env.get("LATEST_JSON_URL") or None,
         spots_path=Path(spots_path),
         out_dir=Path(out_dir),
+        weather_latitude=latitude,
+        weather_longitude=longitude,
     )
 
 
@@ -87,10 +103,24 @@ def run(
     recent = fetch_recent(settings.latest_json_url) if settings.latest_json_url else []
     spot = spot_selector.choose_spot(spots, recent, rng)
     seed = rng.randrange(_SEED_LIMIT)
-    condition = fetch_condition(SEOUL_LATITUDE, SEOUL_LONGITUDE)
+
+    condition = fetch_condition(
+        settings.weather_latitude,
+        settings.weather_longitude,
+    )
+
     season = prompt_builder.season_of(today)
     prompt = prompt_builder.build_prompt(spot, slot, season, condition)
-    logger.info("slot=%s spot=%s weather=%s season=%s", slot, spot.id, condition, season)
+
+    logger.info(
+        "slot=%s spot=%s weather=%s location=%.4f,%.4f season=%s",
+        slot,
+        spot.id,
+        condition,
+        settings.weather_latitude,
+        settings.weather_longitude,
+        season,
+    )
 
     try:
         raw = generate(
@@ -106,7 +136,8 @@ def run(
     except (cf_client.GenerationError, image_post.ImageProcessingError) as exc:
         logger.error("wallpaper generation failed: %s", exc)
         notify(
-            settings.webhook_url, f"[daily-wallpaper] {today} {slot} ({spot.name_ko}) 실패: {exc}"
+            settings.webhook_url,
+            f"[daily-wallpaper] {today} {slot} ({spot.name_ko}) 실패: {exc}",
         )
         return 1
 
@@ -120,6 +151,8 @@ def run(
             "spot_area": spot.area,
             "season": season,
             "weather": condition,
+            "weather_latitude": settings.weather_latitude,
+            "weather_longitude": settings.weather_longitude,
             "model": settings.model,
             "seed": seed,
             "generated_at": now.isoformat(),
@@ -140,12 +173,18 @@ def main(argv=None, env=None, now: datetime | None = None) -> int:
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     current = now if now is not None else datetime.now(KST)
+
     try:
-        settings = load_settings(os.environ if env is None else env, args.spots, args.out)
+        settings = load_settings(
+            os.environ if env is None else env,
+            args.spots,
+            args.out,
+        )
         slot = resolve_slot(args.slot, current)
     except ConfigError as exc:
         logger.error("configuration error: %s", exc)
         return 2
+
     return run(settings, current, slot)
 
 
@@ -153,7 +192,8 @@ def _write_outputs(out_dir: Path, jpeg: bytes, metadata: dict) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "latest.jpg").write_bytes(jpeg)
     (out_dir / "latest.json").write_text(
-        json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8"
+        json.dumps(metadata, ensure_ascii=False, indent=2),
+        encoding="utf-8",
     )
 
 
