@@ -92,12 +92,12 @@ _TIME_PROFILES = {
     },
 }
 # Six time families, six distinct scene moods each; the image itself is still freshly composed.
-TIME_PROFILES["pre_dawn"]["hours"] = range(4, 6)
-TIME_PROFILES["morning"]["hours"] = range(6, 9)
-TIME_PROFILES["day"]["hours"] = range(9, 14)
-TIME_PROFILES["afternoon"]["hours"] = range(14, 17)
-TIME_PROFILES["evening"]["hours"] = range(17, 20)
-TIME_PROFILES["night"]["hours"] = tuple(list(range(20, 24)) + list(range(0, 4)))
+_TIME_PROFILES["pre_dawn"]["hours"] = range(4, 6)
+_TIME_PROFILES["morning"]["hours"] = range(6, 9)
+_TIME_PROFILES["day"]["hours"] = range(9, 14)
+_TIME_PROFILES["afternoon"]["hours"] = range(14, 17)
+_TIME_PROFILES["evening"]["hours"] = range(17, 20)
+_TIME_PROFILES["night"]["hours"] = tuple(list(range(20, 24)) + list(range(0, 4)))
 
 WEATHER_PHRASES = {
     "clear": "clear open sky and crisp natural light",
@@ -247,7 +247,7 @@ def build_prompt(
         raise ValueError(f"unknown weather condition: {condition!r}")
 
     profile_name = time_profile_for(hour) if hour is not None else ("day" if slot == "day" else "night")
-    profile = _TIME_PROFILES[profile_name]
+    profile = __TIME_PROFILES[profile_name]
     time_scene = rng.choice(profile["presets"])
     composition = rng.choice(COMPOSITIONS)
     mood = rng.choice(MOODS)
