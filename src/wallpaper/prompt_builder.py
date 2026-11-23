@@ -90,8 +90,8 @@ THEMES = {
     "nature": "an expansive natural landscape with lakes, forests, coastlines, gardens, rivers or countryside",
     "city": "a lively modern city scene with distinctive streets, rooftops, transit, storefronts and layered skyline",
     "cyberpunk": "a futuristic cyberpunk city at night with neon signage, elevated trains, rain-slick streets and dense architecture",
-    "cozy_room": "a cozy lived-in room with a computer desk, glowing monitor, books, plants, window view and small personal details",
-    "toy_village": "a whimsical miniature toy village with tiny houses, winding lanes, playful architecture and handcrafted details",
+    "cozy_room": "a richly detailed cozy retro-gaming room centered on a vintage computer desk, CRT monitor showing a colorful tiny pixel-art game world, keyboard, books and plants by a large window; tiny glowing square pixels, pixel motes and little light fragments drift through the air as if the room itself is gently alive",
+    "toy_village": "a grand fantastical toy clockwork city inspired by classic colorful 2D MMORPG toy worlds: monumental clock towers, enormous exposed golden gears, winding keys, spring mechanisms, stacked toy-block buildings, brightly colored mechanical rooftops, toy train tracks and miniature locomotives, playful clockwork bridges and whimsical machinery; the entire city must unmistakably look built from toys and clockwork, not an ordinary village",
     "spirit_realm": "an enchanted forest inhabited by tiny luminous nature spirits, magical plants, glowing ponds and ancient trees",
     "cosmic": "an imaginative outer-space vista with planets, nebulae, stars, orbital structures and distant galaxies",
     "fantasy": "a grand fantasy realm with floating islands, impossible waterfalls, ancient castles and magical bridges",
@@ -202,6 +202,22 @@ def build_prompt(
             "Do not turn this into a generic mountain, forest, river, lake or canyon landscape. "
             f"Time and lighting: {time_phrase}. "
         )
+        if theme_name == "cozy_room":
+            subject += (
+                "Capture a lively magical instant: many tiny crisp square pixel motes and small glowing "
+                "pixel fragments float gently through the room, with subtle light trails and sparkling "
+                "clusters. The CRT monitor must visibly contain a colorful miniature pixel-art game scene "
+                "with changing-looking blocks of color and tiny game-world details, not a blank screen or "
+                "a grid of generic app icons. Keep the room cozy, detailed and warmly illuminated. "
+            )
+        elif theme_name == "toy_village":
+            subject += (
+                "Make the clockwork toy-city identity immediately obvious at first glance. The giant clock "
+                "tower and oversized interlocking gears must be major landmarks, with toy-block architecture, "
+                "spring-driven mechanisms and a visible toy railway integrated into the city. Use vivid "
+                "playful colors and a fantastical MMORPG hub-like layout. Do not depict a conventional "
+                "European village, ordinary suburban houses or a generic pastoral town. "
+            )
     subject += (
         f"Composition: {composition}. Overall mood: {mood}. "
         "Create a distinct setting and viewpoint with a clear, readable environmental layout. "
