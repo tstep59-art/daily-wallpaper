@@ -27,7 +27,7 @@ _TIME_PROFILES = {
     "pre_dawn": {
         "label": "새벽", "range": "04:00-06:00",
         "presets": (
-            "silent blue-hour streets with a few distant lamps",
+            "silent pre-sunrise streets with a few distant lamps",
             "mist drifting through a quiet harbor before sunrise",
             "moonlit garden with dew and a faint horizon glow",
             "sleepy railway platform beneath a fading star field",
