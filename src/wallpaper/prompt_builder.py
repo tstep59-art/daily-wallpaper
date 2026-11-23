@@ -6,28 +6,27 @@ from datetime import date
 from .spot_selector import Spot
 
 
-# All three variants remain within the same restrained, detailed pixel-art direction.
+# Scene-neutral pixel-art styles: the selected theme, not the style text, defines the setting.
 STYLES = {
     "landscape": (
-        "Premium-quality, richly detailed 16-bit retro RPG environment pixel art. Clearly visible, well-defined "
-        "small-to-medium square pixels arranged in intentional clusters, with clean stepped edges and "
-        "beautifully detailed pixel-crafted foliage, mountains, forests and reflective water. "
-        "Rich but cohesive color palette, nuanced shading, luminous highlights, layered atmospheric depth "
-        "and polished professional game-art composition. Every detail is carefully pixel-crafted, "
-        "not a smooth painting with a pixel filter."
+        "Premium-quality, richly detailed 16-bit retro RPG pixel art. Clearly visible, well-defined "
+        "small-to-medium square pixels arranged in intentional clusters, clean stepped edges, "
+        "precise pixel-crafted materials and architecture, nuanced shading, luminous highlights, "
+        "layered depth and polished professional game-art composition. "
+        "The setting may be any genre; do not default to nature scenery."
     ),
     "animal": (
-        "Premium-quality, richly detailed 16-bit retro RPG environment pixel art, made from clearly visible "
-        "small-to-medium square pixels and carefully shaped pixel clusters. Clean stepped silhouettes, "
-        "intricate pixel-crafted foliage, layered mountains, forests and reflective water, rich cohesive "
-        "colors, nuanced shading and polished professional game-art composition. One tiny animal may appear "
-        "as a subtle environmental discovery, never a focal point. Hand-crafted pixel by pixel, not filtered artwork."
+        "Premium-quality, richly detailed 16-bit retro RPG pixel art with clearly visible "
+        "small-to-medium square pixels and carefully shaped clusters. Clean stepped silhouettes, "
+        "precise pixel-crafted materials, nuanced shading and polished professional game-art composition. "
+        "The setting may be any genre; do not default to forests, mountains or rivers. "
+        "One tiny animal may appear as an incidental environmental detail, never a focal point."
     ),
     "aesthetic": (
-        "Premium-quality 16-bit pixel-art game scenery with clearly visible small-to-medium square pixels, "
-        "precise intentional pixel clusters and clean stepped outlines. Richly detailed natural depth, "
-        "beautiful cottages and environmental details, cohesive colors, nuanced pixel shading and "
-        "polished professional retro RPG background art, never abstract poster art or painterly illustration."
+        "Premium-quality 16-bit pixel-art game environment with clearly visible small-to-medium square pixels, "
+        "precise intentional clusters, clean stepped outlines, richly detailed objects and architecture, "
+        "cohesive colors, nuanced pixel shading and polished professional retro game background art. "
+        "The setting may be any genre; avoid generic nature scenery unless the chosen theme is nature."
     ),
 }
 
@@ -180,17 +179,22 @@ def build_prompt(
     )
 
     if theme_name == "nature":
-        subject = f"Scene inspiration: {spot.visual}. Natural setting: {theme_phrase}. "
-        f"Season: {season_phrase}. Weather: {weather_phrase}. Time: {time_phrase}. "
+        subject = (
+            f"Scene inspiration: {spot.visual}. World and setting: {theme_phrase}. "
+            f"Season: {season_phrase}. Weather: {weather_phrase}. Time: {time_phrase}. "
+        )
     else:
-        subject = f"World and setting: {theme_phrase}. "
-        "Do not force real-world seasons or weather onto this imaginative scene. "
-        f"Time and lighting: {time_phrase}. "
+        subject = (
+            f"World and setting: {theme_phrase}. "
+            "The selected world type must be unmistakable and occupy most of the frame. "
+            "Show its signature structures, objects and materials prominently. "
+            "Do not turn this into a generic mountain, forest, river, lake or canyon landscape. "
+            f"Time and lighting: {time_phrase}. "
+        )
     subject += (
-        f"Optional environmental inspiration to reinterpret freely: {spot.visual}. "
         f"Composition: {composition}. Overall mood: {mood}. "
-        "Create a distinct setting and viewpoint; do not default to the same lake, cliff, forest or mountain layout. "
-        "Interpret the subject as a wide, immersive environment rather than a literal close-up. "
+        "Create a distinct setting and viewpoint with a clear, readable environmental layout. "
+        "Interpret the subject as a wide, immersive environment rather than a close-up. "
     )
 
     if style_name == "animal":
