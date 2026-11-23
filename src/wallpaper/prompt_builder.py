@@ -187,6 +187,7 @@ def build_prompt(
         "Do not force real-world seasons or weather onto this imaginative scene. "
         f"Time and lighting: {time_phrase}. "
     subject += (
+        f"Optional environmental inspiration to reinterpret freely: {spot.visual}. "
         f"Composition: {composition}. Overall mood: {mood}. "
         "Create a distinct setting and viewpoint; do not default to the same lake, cliff, forest or mountain layout. "
         "Interpret the subject as a wide, immersive environment rather than a literal close-up. "
