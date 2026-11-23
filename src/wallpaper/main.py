@@ -109,6 +109,7 @@ def run(
     )
     recent = previous.get(history.HISTORY_KEY, [])
     previous_style = previous.get(history.STYLE_KEY)
+    previous_theme = previous.get(history.THEME_KEY)
 
     spot = spot_selector.choose_spot(spots, recent, rng)
     seed = rng.randrange(_SEED_LIMIT)
@@ -126,9 +127,18 @@ def run(
         condition,
         previous_style=previous_style,
         rng=rng,
+        previous_theme=previous_theme,
     )
 
     # Identify the selected style from the generated prompt.
+    theme = next(
+        (
+            name
+            for name, phrase in prompt_builder.THEMES.items()
+            if phrase in prompt
+        ),
+        None,
+    )
     style = next(
         (
             name
@@ -177,7 +187,9 @@ def run(
             "spot_name_ko": spot.name_ko,
             "spot_area": spot.area,
             "style": style,
+            "theme": theme,
             history.STYLE_KEY: style,
+            history.THEME_KEY: theme,
             "season": season,
             "weather": condition,
             "weather_latitude": settings.weather_latitude,
