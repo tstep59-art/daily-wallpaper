@@ -254,11 +254,16 @@ def build_prompt(
     effect = rng.choice(AMBIENT_EFFECTS)
 
     subject = f"World: {THEMES[theme_name]}. Moment: {time_scene}. "
-    if theme_name == "nature":
-        subject += f"Nature inspiration: {spot.visual}. Season: {_SEASON_PHRASES[season]}. "
-    elif theme_name in WEATHER_SENSITIVE_THEMES:
-        subject += f"Seasonal detail: {_SEASON_PHRASES[season]}. "
+    subject += f"Location inspiration (minor detail only): {spot.visual}. "
+    subject += f"Season: {season} — {_SEASON_PHRASES[season]}. "
+    if theme_name in WEATHER_SENSITIVE_THEMES:
         subject += f"Ambient weather: {WEATHER_PHRASES[condition]}. "
+        if condition == "rain" and slot == "night":
+            subject += "Rainy night atmosphere. "
+        if condition == "snow":
+            subject += "Gentle snowfall. "
+        if season == "winter":
+            subject += "Winter scenery details. "
     else:
         subject += "Keep the selected setting coherent; do not force outdoor weather into an indoor, underwater or space scene. "
     if theme_name == "cozy_room":
@@ -276,7 +281,8 @@ def build_prompt(
 
     return (
         f"{STYLES[style_name]} {subject}"
-        "Vertical 9:16 smartphone wallpaper, immersive environment, scenery-led composition. "
+        "16-bit pixel art. Vertical 9:16 smartphone wallpaper, immersive environment, scenery-led composition. "
+        "Scenery should occupy 80 to 90 percent of the frame. No large characters. "
         "Keep the upper area visually calm for the phone clock and notifications. "
         "Use crisp small-to-medium square pixels, precise clusters, clean stepped edges, pixel-by-pixel highlights "
         "and shadows, nuanced lighting, intricate materials and premium classic 16-bit RPG game-art finish. "
@@ -284,7 +290,7 @@ def build_prompt(
         "Avoid oversized coarse pixels, excessive dithering, muddy blocks, blur, painterly brushwork, watercolor, "
         "photorealism, 3D rendering, vector art, chibi or childish cartoon styling. "
         "Dark cliffs and heavy shadow masses must not dominate the foreground. "
-        "No large characters, close-up animals, text, letters, watermark, logo, border or frame."
+        "No large characters, close-up animals, no text, no letters, watermark, logo, border or frame."
     )
 
 def _lookup(table: dict, key: str, label: str):
