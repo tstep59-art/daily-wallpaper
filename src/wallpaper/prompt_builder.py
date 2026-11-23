@@ -9,24 +9,25 @@ from .spot_selector import Spot
 # All three variants remain within the same restrained, detailed pixel-art direction.
 STYLES = {
     "landscape": (
-        "Authentic 16-bit retro RPG game background pixel art, with clearly visible medium-sized square pixels "
-        "and deliberate block-by-block pixel clusters. Distinct stepped pixel edges, tile-like foliage, "
-        "pixel-shaped highlights, layered mountains, forests and reflective water. "
-        "Limited cohesive game-era color palette, carefully grouped shades, strong readable light and shadow. "
-        "Looks hand-crafted pixel by pixel, not a painting with a pixel filter."
+        "Premium-quality, richly detailed 16-bit retro RPG environment pixel art. Clearly visible, well-defined "
+        "small-to-medium square pixels arranged in intentional clusters, with clean stepped edges and "
+        "beautifully detailed pixel-crafted foliage, mountains, forests and reflective water. "
+        "Rich but cohesive color palette, nuanced shading, luminous highlights, layered atmospheric depth "
+        "and polished professional game-art composition. Every detail is carefully pixel-crafted, "
+        "not a smooth painting with a pixel filter."
     ),
     "animal": (
-        "Authentic 16-bit retro RPG environment pixel art, made from clearly visible square pixels "
-        "and deliberate blocky pixel clusters. Distinct stepped silhouettes, pixel-shaped foliage, "
-        "layered mountains, forests and reflective water, with a limited cohesive game-era palette "
-        "and readable pixel shading. One tiny animal may appear as a subtle environmental discovery, "
-        "never a focal point. It must look hand-crafted pixel by pixel, not filtered artwork."
+        "Premium-quality, richly detailed 16-bit retro RPG environment pixel art, made from clearly visible "
+        "small-to-medium square pixels and carefully shaped pixel clusters. Clean stepped silhouettes, "
+        "intricate pixel-crafted foliage, layered mountains, forests and reflective water, rich cohesive "
+        "colors, nuanced shading and polished professional game-art composition. One tiny animal may appear "
+        "as a subtle environmental discovery, never a focal point. Hand-crafted pixel by pixel, not filtered artwork."
     ),
     "aesthetic": (
-        "Authentic 16-bit pixel-art game scenery, with clearly visible square pixels, chunky deliberate "
-        "pixel clusters, stepped outlines and block-built environmental details. Layered natural depth, "
-        "small cottages and landscape details, restrained limited palette and carefully grouped pixel shading. "
-        "Polished classic retro RPG background art, never abstract poster art or painterly illustration."
+        "Premium-quality 16-bit pixel-art game scenery with clearly visible small-to-medium square pixels, "
+        "precise intentional pixel clusters and clean stepped outlines. Richly detailed natural depth, "
+        "beautiful cottages and environmental details, cohesive colors, nuanced pixel shading and "
+        "polished professional retro RPG background art, never abstract poster art or painterly illustration."
     ),
 }
 
@@ -151,13 +152,14 @@ def build_prompt(
         f"Season: {season_phrase}. Weather: {weather_phrase}. Time: {time_phrase}. "
         "Vertical 9:16 smartphone wallpaper composition. "
         "Scenery should occupy approximately 80 to 90 percent of the image. "
-        "Make the pixel structure unmistakable: visible square pixels at a consistent medium-to-large scale, "
-        "chunky grouped pixel clusters, stepped diagonal edges, simplified block-shaped foliage and rocks, "
-        "pixel-by-pixel highlights and shadows, and a limited cohesive 16-bit palette. "
-        "Avoid tiny noisy dithering and avoid smooth gradients. Absolutely no anti-aliasing, "
-        "blur, painterly brushwork, watercolor texture, or smooth digital illustration. "
-        "It must look like an authentic classic 16-bit RPG game screenshot, not a normal image with a pixel filter; "
-        "not photorealistic, not 3D, not vector art, not chibi, not childish cartoon. "
+        "Make the pixel structure clearly visible but refined: consistent small-to-medium square pixels, "
+        "precise clusters, clean stepped edges and pixel-by-pixel highlights and shadows. "
+        "Preserve high resolution, intricate environmental details, rich color variation, nuanced lighting, "
+        "depth and the polished finish of premium 16-bit RPG game artwork. Do not make the pixels oversized, "
+        "coarse, crude or noisy; avoid excessive dithering and muddy color blocks. Avoid blur, painterly brushwork, "
+        "watercolor texture and smooth digital illustration. It must look like beautifully crafted classic "
+        "16-bit RPG game art, not a normal image with a pixel filter; not photorealistic, not 3D, not vector art, "
+        "not chibi, not childish cartoon. "
         "Keep the upper area visually calm enough for the phone clock and notifications. "
         "No large characters, no close-up animals, no text, no letters, no watermark, "
         "no logo, no border, no frame."
