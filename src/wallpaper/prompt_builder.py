@@ -9,19 +9,21 @@ from .spot_selector import Spot
 # All three variants remain within the same restrained, detailed pixel-art direction.
 STYLES = {
     "landscape": (
-        "Beautiful, highly detailed 16-bit pixel art environment, carefully crafted "
-        "pixel clusters, rich environmental detail, layered scenery, atmospheric depth, "
-        "polished retro game background art. The landscape must dominate the composition."
+        "Beautiful, richly detailed 16-bit pixel art landscape, with crisp intentional pixel clusters, "
+        "layered distant mountains, lush forests, reflective water, intricate natural textures, "
+        "warm cinematic light, delicate clouds and atmospheric depth. "
+        "Colorful but tasteful, like a premium retro game environment background."
     ),
     "animal": (
-        "Beautiful, highly detailed 16-bit pixel art landscape with one tiny, charming "
-        "animal as a subtle environmental detail. The animal must be small and secondary, "
-        "never a portrait or focal point. Scenic background art remains dominant."
+        "Beautiful, richly detailed 16-bit pixel art landscape with crisp intentional pixel clusters, "
+        "layered mountains, forests, reflective water and warm cinematic light. "
+        "One tiny animal may appear as a subtle environmental discovery, never a focal point. "
+        "Premium retro game environment background, colorful but tasteful."
     ),
     "aesthetic": (
-        "Beautiful, highly detailed 16-bit pixel art scenery with a refined, imaginative "
-        "environmental composition, atmospheric depth, intricate architecture or nature, "
-        "and polished retro game background art. Avoid abstract poster-like designs."
+        "Beautiful, richly detailed 16-bit pixel art scenery with refined environmental composition, "
+        "layered natural depth, intricate cottages or landscape details, soft atmospheric light "
+        "and polished premium retro game background art. Avoid abstract poster-like designs."
     ),
 }
 
@@ -146,7 +148,8 @@ def build_prompt(
         f"Season: {season_phrase}. Weather: {weather_phrase}. Time: {time_phrase}. "
         "Vertical 9:16 smartphone wallpaper composition. "
         "Scenery should occupy approximately 80 to 90 percent of the image. "
-        "Use beautiful, balanced, detailed 16-bit pixel art with deliberate pixel structure; "
+        "Use crisp, deliberate 16-bit pixel clusters with fine environmental detail, "
+        "beautiful natural color transitions and a balanced, immersive composition; "
         "not photorealistic, not 3D, not smooth vector art, not chibi, not childish cartoon. "
         "Keep the upper area visually calm enough for the phone clock and notifications. "
         "No large characters, no close-up animals, no text, no letters, no watermark, "
