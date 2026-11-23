@@ -1,5 +1,4 @@
-
-"""Build varied, colorful, weather-aware prompts for daily smartphone wallpapers."""
+"""Build scenic, high-quality 16-bit pixel-art prompts for daily smartphone wallpapers."""
 
 import random
 from datetime import date
@@ -7,101 +6,76 @@ from datetime import date
 from .spot_selector import Spot
 
 
+# All three variants remain within the same restrained, detailed pixel-art direction.
 STYLES = {
     "landscape": (
-        "Premium photorealistic landscape photography, breathtaking natural scenery, "
-        "cinematic composition, realistic camera details, rich vivid natural colors, "
-        "beautiful atmospheric lighting, deep blues, emerald greens and warm golden tones. "
-        "Create a sophisticated and visually immersive scene."
+        "Beautiful, highly detailed 16-bit pixel art environment, carefully crafted "
+        "pixel clusters, rich environmental detail, layered scenery, atmospheric depth, "
+        "polished retro game background art. The landscape must dominate the composition."
     ),
     "animal": (
-        "High-quality colorful wildlife and nature photography. Feature a charming, "
-        "adorable animal with realistic anatomy, detailed natural fur or feathers, "
-        "and a gentle expressive personality. The animal should look naturally cute, "
-        "not cartoonish or childish. Use rich natural colors and beautiful cinematic light. "
-        "Show the animal's full body or at least most of its body in its environment. "
-        "The animal should occupy approximately 30 to 50 percent of the image. "
-        "Never use an extreme close-up, face-only portrait, or oversized head."
+        "Beautiful, highly detailed 16-bit pixel art landscape with one tiny, charming "
+        "animal as a subtle environmental detail. The animal must be small and secondary, "
+        "never a portrait or focal point. Scenic background art remains dominant."
     ),
     "aesthetic": (
-        "Sophisticated contemporary digital art and fine-art visual design. "
-        "Creative surrealism, cinematic 3D art, imaginative architecture, "
-        "abstract forms, futuristic scenery and artistic landscapes. "
-        "Use bold yet harmonious colors, deep blue, emerald, charcoal, orange, "
-        "violet and tasteful contrasting accents. "
-        "A refined, modern, visually striking atmosphere, not overly cute or childish."
+        "Beautiful, highly detailed 16-bit pixel art scenery with a refined, imaginative "
+        "environmental composition, atmospheric depth, intricate architecture or nature, "
+        "and polished retro game background art. Avoid abstract poster-like designs."
     ),
 }
 
-# Approximate distribution: landscape 40%, animal 30%, aesthetic 30%.
+# Keep the image overwhelmingly scenery-led; animal appearances are occasional accents.
 _STYLE_WEIGHTS = {
-    "landscape": 4,
-    "animal": 3,
-    "aesthetic": 3,
+    "landscape": 8,
+    "animal": 1,
+    "aesthetic": 1,
 }
 
 _SEASON_PHRASES = {
-    "spring": (
-        "spring atmosphere, fresh green leaves, blooming trees, "
-        "clear gentle sunlight and lively natural colors"
-    ),
-    "summer": (
-        "summer atmosphere, lush green nature, vivid colors, "
-        "bright sunlight and refreshing scenery"
-    ),
-    "autumn": (
-        "autumn atmosphere, golden and red foliage, "
-        "warm rich colors and crisp air"
-    ),
-    "winter": (
-        "winter atmosphere, beautiful snow, crisp air, "
-        "cool blue tones and peaceful winter scenery"
-    ),
+    "spring": "spring scenery, fresh foliage, delicate blossoms and a gentle seasonal atmosphere",
+    "summer": "lush summer scenery, dense foliage and clear, refreshing atmosphere",
+    "autumn": "autumn foliage, fallen leaves and a calm seasonal atmosphere",
+    "winter": "winter scenery, snow-covered details and crisp, peaceful atmosphere",
 }
 
 _TIME_PHRASES = {
-    "day": (
-        "daytime lighting, natural sunlight, clear visual details, "
-        "balanced exposure and beautiful vibrant colors"
-    ),
-    "night": (
-        "nighttime atmosphere, cinematic low-light photography, "
-        "beautiful ambient lights, deep rich colors and realistic night lighting"
-    ),
+    "day": "daytime atmosphere, natural sunlight and clear environmental details",
+    "night": "nighttime atmosphere, subtle glowing lights, stars and peaceful ambient lighting",
 }
 
 _WEATHER_PHRASES = {
     "clear": {
-        "day": "clear sky, bright sunshine and crisp natural light",
-        "night": "clear night sky, visible stars and peaceful moonlight",
+        "day": "clear sky and crisp natural light",
+        "night": "clear night sky, visible stars and gentle moonlight",
     },
     "partly_cloudy": {
-        "day": "beautiful scattered clouds and soft sunlight",
-        "night": "partly cloudy sky with moonlight between the clouds",
+        "day": "scattered clouds and soft sunlight",
+        "night": "clouds drifting across a moonlit sky",
     },
     "overcast": {
-        "day": "dramatic cloudy sky and soft diffused daylight",
-        "night": "cloudy night sky and atmospheric low-light scenery",
+        "day": "layered clouds and soft diffused daylight",
+        "night": "cloudy night sky and quiet ambient lighting",
     },
     "fog": {
-        "day": "mysterious morning mist, atmospheric fog and soft light",
-        "night": "dreamlike night fog and mysterious atmospheric lighting",
+        "day": "light morning mist and atmospheric depth",
+        "night": "soft night fog and mysterious ambient lighting",
     },
     "rain": {
-        "day": "fresh rain, wet surfaces, reflections and moody natural lighting",
-        "night": "rainy night, glowing reflections and cinematic lighting",
+        "day": "gentle rainfall, reflective surfaces and fresh atmosphere",
+        "night": "rainy night, tiny reflections and quiet ambient lighting",
     },
     "snow": {
-        "day": "beautiful snowfall, fresh white snow and soft winter light",
-        "night": "snow falling under beautiful nighttime lights",
+        "day": "gentle snowfall and fresh snow across the scenery",
+        "night": "snow falling softly under quiet nighttime lights",
     },
     "thunderstorm": {
-        "day": "dramatic storm clouds, powerful rain and cinematic atmosphere",
-        "night": "dramatic thunderstorm, dark clouds and distant lightning",
+        "day": "dramatic storm clouds and distant rainfall",
+        "night": "distant lightning behind dramatic storm clouds",
     },
     "unknown": {
         "day": "peaceful natural atmosphere and balanced daylight",
-        "night": "peaceful nighttime atmosphere and soft ambient lighting",
+        "night": "peaceful nighttime atmosphere and subtle ambient lighting",
     },
 }
 
@@ -124,10 +98,8 @@ def choose_style(previous_style: str | None = None, rng=None) -> str:
         for style, weight in _STYLE_WEIGHTS.items()
         for _ in range(weight)
     ]
-
     if previous_style in STYLES and len(STYLES) > 1:
         choices = [style for style in choices if style != previous_style]
-
     return rng.choice(choices)
 
 
@@ -150,45 +122,35 @@ def build_prompt(
         "slot",
     )
 
-    if style_name == "landscape":
-        subject = (
-            f"Scene: {spot.visual}. "
-            "Show a wide, immersive view of the surrounding environment. "
-            "The scenery is the main subject, not a close-up object."
-        )
-    elif style_name == "animal":
-        subject = (
-            "Create a charming wildlife scene. Choose an appealing animal such as "
-            "a fox, red panda, otter, rabbit, squirrel, cat, dog, deer or other "
-            "interesting animal. Vary the animal between generations. "
-            "Show it naturally walking, sitting, playing, exploring or resting "
-            "in a beautiful environment such as a forest, meadow, riverside or snowy landscape. "
-            "Include plenty of visible scenery around the animal. "
-            "Avoid extreme close-ups, face-only portraits and studio backgrounds."
+    subject = (
+        f"Scene inspiration: {spot.visual}. "
+        "Interpret this as a wide, immersive environment rather than a literal close-up. "
+        "Vary the setting naturally across generations: quiet lakes, forests, coastlines, "
+        "mountain villages, riversides, gardens and peaceful countryside."
+    )
+
+    if style_name == "animal":
+        subject += (
+            " Include at most one small animal, such as a cat, fox, rabbit, deer or bird, "
+            "occupying only a tiny part of the scene (about 5 to 10 percent of the frame). "
+            "It should feel like a quiet discovery within the landscape, not a character portrait."
         )
     else:
-        subject = (
-            "Create an original artistic wallpaper with a strong visual concept. "
-            "Explore imaginative landscapes, surreal architecture, futuristic cities, "
-            "cinematic 3D environments, abstract geometry or visually striking natural forms. "
-            "Use a sophisticated and balanced color palette. "
-            "Avoid overly feminine decorations, excessive pink, excessive pastel colors, "
-            "floral patterns and childish cartoon aesthetics."
+        subject += (
+            " If any animal or small object appears, keep it tiny and incidental, "
+            "never larger than a minor detail in the environment."
         )
 
     return (
         f"{style_phrase} {subject} "
-        f"Season: {season_phrase}. "
-        f"Weather: {weather_phrase}. "
-        f"Time: {time_phrase}. "
+        f"Season: {season_phrase}. Weather: {weather_phrase}. Time: {time_phrase}. "
         "Vertical 9:16 smartphone wallpaper composition. "
-        "Carefully balanced composition with some calm visual space near the top "
-        "for the phone clock and notifications. "
-        "The main subject must be clearly visible without filling the entire frame. "
-        "Full color image only. Absolutely no black and white, monochrome, "
-        "grayscale, ink wash or desaturated treatment. "
-        "High detail, beautiful professional quality. "
-        "No text, no letters, no watermark, no logo, no borders."
+        "Scenery should occupy approximately 80 to 90 percent of the image. "
+        "Use beautiful, balanced, detailed 16-bit pixel art with deliberate pixel structure; "
+        "not photorealistic, not 3D, not smooth vector art, not chibi, not childish cartoon. "
+        "Keep the upper area visually calm enough for the phone clock and notifications. "
+        "No large characters, no close-up animals, no text, no letters, no watermark, "
+        "no logo, no border, no frame."
     )
 
 
