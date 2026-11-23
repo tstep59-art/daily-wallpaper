@@ -95,6 +95,7 @@ def run(
     generate=cf_client.generate_image,
     notify=notifier.notify_failure,
     rng: random.Random | None = None,
+    theme_override: str | None = None,
 ) -> int:
     """Generate one wallpaper. `now` must be in KST. Returns the process exit code."""
     today = now.date()
@@ -109,6 +110,7 @@ def run(
     )
     recent = previous.get(history.HISTORY_KEY, [])
     previous_style = previous.get(history.STYLE_KEY)
+    previous_theme = previous.get(history.THEME_KEY)
 
     spot = spot_selector.choose_spot(spots, recent, rng)
     seed = rng.randrange(_SEED_LIMIT)
@@ -126,9 +128,20 @@ def run(
         condition,
         previous_style=previous_style,
         rng=rng,
+        previous_theme=previous_theme,
+        theme_override=theme_override,
+        hour=now.hour,
     )
 
     # Identify the selected style from the generated prompt.
+    theme = next(
+        (
+            name
+            for name, phrase in prompt_builder.THEMES.items()
+            if phrase in prompt
+        ),
+        None,
+    )
     style = next(
         (
             name
@@ -139,8 +152,9 @@ def run(
     )
 
     logger.info(
-        "slot=%s spot=%s style=%s weather=%s location=%.4f,%.4f season=%s",
+        "slot=%s time_profile=%s spot=%s style=%s weather=%s location=%.4f,%.4f season=%s",
         slot,
+        prompt_builder.time_profile_for(now.hour),
         spot.id,
         style,
         condition,
@@ -173,11 +187,15 @@ def run(
         jpeg,
         {
             "slot": slot,
+            "time_profile": prompt_builder.time_profile_for(now.hour),
+            "time_profile_label": prompt_builder._TIME_PROFILES[prompt_builder.time_profile_for(now.hour)]["label"],
             "spot_id": spot.id,
             "spot_name_ko": spot.name_ko,
             "spot_area": spot.area,
             "style": style,
+            "theme": theme,
             history.STYLE_KEY: style,
+            history.THEME_KEY: theme,
             "season": season,
             "weather": condition,
             "weather_latitude": settings.weather_latitude,
@@ -196,6 +214,7 @@ def run(
 def main(argv=None, env=None, now: datetime | None = None) -> int:
     parser = argparse.ArgumentParser(description="Generate the daily landscape wallpaper.")
     parser.add_argument("--slot", choices=("auto", *SLOTS), default="auto")
+    parser.add_argument("--theme", choices=("auto", *prompt_builder.THEMES), default="auto", help="force a scene theme for preview runs")
     parser.add_argument("--out", type=Path, default=Path("site"))
     parser.add_argument("--spots", type=Path, default=DEFAULT_SPOTS_PATH)
     args = parser.parse_args(argv)
@@ -214,7 +233,8 @@ def main(argv=None, env=None, now: datetime | None = None) -> int:
         logger.error("configuration error: %s", exc)
         return 2
 
-    return run(settings, current, slot)
+    theme_override = None if args.theme == "auto" else args.theme
+    return run(settings, current, slot, theme_override=theme_override)
 
 
 def _write_outputs(out_dir: Path, jpeg: bytes, metadata: dict) -> None:

@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 HISTORY_KEY = "recent_spot_ids"
 STYLE_KEY = "previous_style"
+THEME_KEY = "previous_theme"
 
 
 def fetch_history(url: str | None, get=requests.get, timeout: int = 10) -> dict:
@@ -29,6 +30,7 @@ def fetch_history(url: str | None, get=requests.get, timeout: int = 10) -> dict:
 
         recent = data.get(HISTORY_KEY, [])
         style = data.get(STYLE_KEY)
+        theme = data.get(THEME_KEY)
 
         if not isinstance(recent, list) or not all(
             isinstance(item, str) for item in recent
@@ -37,10 +39,13 @@ def fetch_history(url: str | None, get=requests.get, timeout: int = 10) -> dict:
 
         if style is not None and not isinstance(style, str):
             raise TypeError(f"{STYLE_KEY} is not a string")
+        if theme is not None and not isinstance(theme, str):
+            raise TypeError(f"{THEME_KEY} is not a string")
 
         return {
             HISTORY_KEY: recent,
             STYLE_KEY: style,
+            THEME_KEY: theme,
         }
 
     except (requests.RequestException, KeyError, TypeError, ValueError) as exc:

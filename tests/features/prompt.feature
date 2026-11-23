@@ -1,5 +1,5 @@
-Feature: 프롬프트 조립
-  정선풍 진경산수화라는 고정 스타일 위에 명승지, 계절, 날씨, 시간대를 얹는다.
+Feature: 픽셀아트 프롬프트 조립
+  풍경 중심의 고품질 16-bit 픽셀아트에 명승지, 계절, 날씨, 시간대를 반영한다.
 
   Scenario Outline: 날짜로 계절을 정한다
     When 날짜 <date> 의 계절을 구한다
@@ -16,56 +16,29 @@ Feature: 프롬프트 조립
       | 2026-12-01 | winter |
       | 2027-02-28 | winter |
 
-  Scenario: 고정 화풍 문구가 항상 들어간다
+  Scenario: 모든 프롬프트는 세밀한 16비트 픽셀아트다
     Given 박연폭포 명승지
     When day 시간대, autumn 계절, clear 날씨로 프롬프트를 만든다
-    Then 프롬프트에 "jingyeong sansuhwa" 가 들어 있다
-    And 프롬프트에 "Jeong Seon" 가 들어 있다
+    Then 프롬프트에 "16-bit pixel art" 가 들어 있다
+    And 프롬프트에 "Vertical 9:16 smartphone wallpaper" 가 들어 있다
     And 프롬프트에 "no text" 가 들어 있다
 
-  Scenario: 흑백 수묵을 요구한다
+  Scenario: 풍경이 화면 대부분을 차지한다
     Given 박연폭포 명승지
     When day 시간대, autumn 계절, clear 날씨로 프롬프트를 만든다
-    Then 프롬프트에 "monochrome" 가 들어 있다
-    And 프롬프트에 "no color" 가 들어 있다
-
-  Scenario: 그림이 화면 가장자리까지 꽉 차도록 요구한다
-    Given 박연폭포 명승지
-    When day 시간대, autumn 계절, clear 날씨로 프롬프트를 만든다
-    Then 프롬프트에 "edge to edge" 가 들어 있다
-    And 프롬프트에 "no paper margin" 가 들어 있다
+    Then 프롬프트에 "80 to 90 percent" 가 들어 있다
+    And 프롬프트에 "no large characters" 가 들어 있다
 
   Scenario: 명승지 묘사가 들어간다
     Given 박연폭포 명승지
     When day 시간대, autumn 계절, clear 날씨로 프롬프트를 만든다
     Then 프롬프트에 "waterfall plunging" 가 들어 있다
 
-  Scenario: 낮 프롬프트는 밝은 톤을 요구한다
+  Scenario: 계절과 날씨가 프롬프트에 반영된다
     Given 박연폭포 명승지
-    When day 시간대, autumn 계절, clear 날씨로 프롬프트를 만든다
-    Then 프롬프트에 "bright daytime" 가 들어 있다
-    And 프롬프트에 "deep black ink" 가 들어 있지 않다
-
-  Scenario: 밤 프롬프트는 어두운 톤을 요구한다
-    Given 박연폭포 명승지
-    When night 시간대, autumn 계절, clear 날씨로 프롬프트를 만든다
-    Then 프롬프트에 "deep black ink" 가 들어 있다
-    And 프롬프트에 "bright daytime" 가 들어 있지 않다
-
-  Scenario: 계절이 프롬프트에 반영된다
-    Given 박연폭포 명승지
-    When day 시간대, winter 계절, clear 날씨로 프롬프트를 만든다
-    Then 프롬프트에 "snow dusting the rocks" 가 들어 있다
-
-  Scenario: 비 오는 낮의 날씨가 반영된다
-    Given 박연폭포 명승지
-    When day 시간대, summer 계절, rain 날씨로 프롬프트를 만든다
-    Then 프롬프트에 "falling rain" 가 들어 있다
-
-  Scenario: 비 오는 밤에는 달이 가려진다
-    Given 박연폭포 명승지
-    When night 시간대, summer 계절, rain 날씨로 프롬프트를 만든다
-    Then 프롬프트에 "moon hidden" 가 들어 있다
+    When day 시간대, winter 계절, snow 날씨로 프롬프트를 만든다
+    Then 프롬프트에 "winter scenery" 가 들어 있다
+    And 프롬프트에 "gentle snowfall" 가 들어 있다
 
   Scenario: 모든 날씨 상태와 시간대와 계절 조합에 문구가 준비되어 있다
     Given 박연폭포 명승지
