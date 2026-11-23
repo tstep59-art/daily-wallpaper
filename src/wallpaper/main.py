@@ -130,6 +130,7 @@ def run(
         rng=rng,
         previous_theme=previous_theme,
         theme_override=theme_override,
+        hour=now.hour,
     )
 
     # Identify the selected style from the generated prompt.
@@ -151,8 +152,9 @@ def run(
     )
 
     logger.info(
-        "slot=%s spot=%s style=%s weather=%s location=%.4f,%.4f season=%s",
+        "slot=%s time_profile=%s spot=%s style=%s weather=%s location=%.4f,%.4f season=%s",
         slot,
+        prompt_builder.time_profile_for(now.hour),
         spot.id,
         style,
         condition,
@@ -185,6 +187,8 @@ def run(
         jpeg,
         {
             "slot": slot,
+            "time_profile": prompt_builder.time_profile_for(now.hour),
+            "time_profile_label": prompt_builder._TIME_PROFILES[prompt_builder.time_profile_for(now.hour)]["label"],
             "spot_id": spot.id,
             "spot_name_ko": spot.name_ko,
             "spot_area": spot.area,
