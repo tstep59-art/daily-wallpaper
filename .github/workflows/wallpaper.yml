@@ -27,6 +27,11 @@ on:
         description: "경도 (선택)"
         type: string
         default: ""
+      theme:
+        description: "테스트할 장면 테마"
+        type: choice
+        options: [auto, city, cyberpunk, cozy_room, toy_village, spirit_realm, cosmic, fantasy, underwater, steampunk, desert, snow_globe, nature]
+        default: auto
 
 concurrency:
   group: wallpaper
@@ -54,6 +59,7 @@ jobs:
         env:
           PYTHONPATH: src
           SLOT: ${{ github.event.client_payload.slot || inputs.slot || 'auto' }}
+          THEME: ${{ inputs.theme || 'auto' }}
           WEATHER_LATITUDE: ${{ github.event.client_payload.latitude || inputs.latitude || '37.5665' }}
           WEATHER_LONGITUDE: ${{ github.event.client_payload.longitude || inputs.longitude || '126.9780' }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
@@ -61,7 +67,7 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           WALLPAPER_MODEL: ${{ vars.WALLPAPER_MODEL }}
           LATEST_JSON_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/latest.json
-        run: python -m wallpaper.main --slot "$SLOT" --out site
+        run: python -m wallpaper.main --slot "$SLOT" --theme "$THEME" --out site
 
       - uses: actions/upload-pages-artifact@v5
         with:
