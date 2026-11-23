@@ -95,6 +95,7 @@ def run(
     generate=cf_client.generate_image,
     notify=notifier.notify_failure,
     rng: random.Random | None = None,
+    theme_override: str | None = None,
 ) -> int:
     """Generate one wallpaper. `now` must be in KST. Returns the process exit code."""
     today = now.date()
@@ -128,6 +129,7 @@ def run(
         previous_style=previous_style,
         rng=rng,
         previous_theme=previous_theme,
+        theme_override=theme_override,
     )
 
     # Identify the selected style from the generated prompt.
@@ -208,6 +210,7 @@ def run(
 def main(argv=None, env=None, now: datetime | None = None) -> int:
     parser = argparse.ArgumentParser(description="Generate the daily landscape wallpaper.")
     parser.add_argument("--slot", choices=("auto", *SLOTS), default="auto")
+    parser.add_argument("--theme", choices=("auto", *prompt_builder.THEMES), default="auto", help="force a scene theme for preview runs")
     parser.add_argument("--out", type=Path, default=Path("site"))
     parser.add_argument("--spots", type=Path, default=DEFAULT_SPOTS_PATH)
     args = parser.parse_args(argv)
@@ -226,7 +229,8 @@ def main(argv=None, env=None, now: datetime | None = None) -> int:
         logger.error("configuration error: %s", exc)
         return 2
 
-    return run(settings, current, slot)
+    theme_override = None if args.theme == "auto" else args.theme
+    return run(settings, current, slot, theme_override=theme_override)
 
 
 def _write_outputs(out_dir: Path, jpeg: bytes, metadata: dict) -> None:
