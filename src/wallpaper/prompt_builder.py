@@ -99,6 +99,14 @@ THEMES = {
     "steampunk": "a richly detailed steampunk town with brass machinery, airships, clockwork towers and intricate rooftops",
     "desert": "a vast desert oasis with sculpted dunes, palm groves, caravan paths and distant monumental architecture",
     "snow_globe": "a charming miniature winter town inside a snow globe, warmly lit windows and delicate handcrafted scenery",
+    "night_market": "a lively traditional night market street with glowing paper lanterns, colorful food stalls, shop signs, bustling narrow lanes and warm reflections",
+    "seaside_harbor": "a colorful Mediterranean seaside harbor town with boats, sailboats, pastel waterfront buildings, docks, terraces and sparkling open sea",
+    "magic_library": "a grand enchanted magical library interior with towering bookshelves, spiral staircases, floating books, glowing candles and intricate reading alcoves",
+    "retro_arcade": "a vibrant retro arcade interior filled with classic arcade cabinets, vintage game machines, glowing neon accents, patterned floors and nostalgic details",
+    "countryside_station": "a quiet Japanese countryside railway station with a small station building, railway tracks, crossing signals, utility poles, distant homes and open summer skies",
+    "sky_islands": "a fantastical sky-island world with floating islands, waterfalls spilling into clouds, airships, suspended bridges and vast luminous cloudscapes",
+    "storybook_village": "a charming European storybook village with timber-framed cottages, a cozy bakery, cobblestone lanes, flower boxes, chimneys and inviting warm windows",
+    "onsen_town": "a picturesque Japanese hot-spring town with traditional wooden inns, outdoor baths, steaming mineral pools, stone paths, lanterns and peaceful mountain-town architecture",
 }
 
 COMPOSITIONS = (
