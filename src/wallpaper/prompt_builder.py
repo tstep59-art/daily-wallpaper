@@ -247,7 +247,7 @@ def build_prompt(
         raise ValueError(f"unknown weather condition: {condition!r}")
 
     profile_name = time_profile_for(hour) if hour is not None else ("day" if slot == "day" else "night")
-    profile = __TIME_PROFILES[profile_name]
+    profile = _TIME_PROFILES[profile_name]
     time_scene = rng.choice(profile["presets"])
     composition = rng.choice(COMPOSITIONS)
     mood = rng.choice(MOODS)
