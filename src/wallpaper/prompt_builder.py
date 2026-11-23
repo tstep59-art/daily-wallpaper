@@ -162,10 +162,13 @@ def build_prompt(
     previous_style: str | None = None,
     rng=None,
     previous_theme: str | None = None,
+    theme_override: str | None = None,
 ) -> str:
     style_name = choose_style(previous_style, rng)
     style_phrase = STYLES[style_name]
-    theme_name = choose_theme(previous_theme, rng)
+    theme_name = theme_override or choose_theme(previous_theme, rng)
+    if theme_name not in THEMES:
+        raise ValueError(f"unknown theme: {theme_name!r}")
     theme_phrase = THEMES[theme_name]
     composition = rng.choice(COMPOSITIONS) if rng is not None else random.choice(COMPOSITIONS)
     mood = rng.choice(MOODS) if rng is not None else random.choice(MOODS)
