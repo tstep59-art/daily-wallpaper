@@ -30,7 +30,7 @@ on:
       theme:
         description: "테스트할 장면 테마"
         type: choice
-        options: [auto, city, cyberpunk, cozy_room, toy_village, spirit_realm, cosmic, fantasy, underwater, steampunk, desert, snow_globe, nature]
+        options: [auto, city, cyberpunk, cozy_room, toy_village, spirit_realm, cosmic, fantasy, underwater, steampunk, desert, snow_globe, nature, night_market, seaside_harbor, magic_library, retro_arcade, countryside_station, sky_islands, storybook_village, onsen_town]
         default: auto
 
 concurrency:
