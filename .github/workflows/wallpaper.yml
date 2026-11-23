@@ -67,7 +67,15 @@ jobs:
         with:
           path: site
 
+      # Keep experiment output downloadable without publishing it to the live wallpaper URL.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pixel-art-preview
+          path: site
+          retention-days: 7
+
   deploy:
+    if: github.ref == 'refs/heads/main'
     needs: generate
     runs-on: ubuntu-latest
     permissions:
