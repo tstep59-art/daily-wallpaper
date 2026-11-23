@@ -9,21 +9,24 @@ from .spot_selector import Spot
 # All three variants remain within the same restrained, detailed pixel-art direction.
 STYLES = {
     "landscape": (
-        "Beautiful, richly detailed 16-bit pixel art landscape, with crisp intentional pixel clusters, "
-        "layered distant mountains, lush forests, reflective water, intricate natural textures, "
-        "warm cinematic light, delicate clouds and atmospheric depth. "
-        "Colorful but tasteful, like a premium retro game environment background."
+        "Authentic 16-bit retro RPG game background pixel art, with clearly visible medium-sized square pixels "
+        "and deliberate block-by-block pixel clusters. Distinct stepped pixel edges, tile-like foliage, "
+        "pixel-shaped highlights, layered mountains, forests and reflective water. "
+        "Limited cohesive game-era color palette, carefully grouped shades, strong readable light and shadow. "
+        "Looks hand-crafted pixel by pixel, not a painting with a pixel filter."
     ),
     "animal": (
-        "Beautiful, richly detailed 16-bit pixel art landscape with crisp intentional pixel clusters, "
-        "layered mountains, forests, reflective water and warm cinematic light. "
-        "One tiny animal may appear as a subtle environmental discovery, never a focal point. "
-        "Premium retro game environment background, colorful but tasteful."
+        "Authentic 16-bit retro RPG environment pixel art, made from clearly visible square pixels "
+        "and deliberate blocky pixel clusters. Distinct stepped silhouettes, pixel-shaped foliage, "
+        "layered mountains, forests and reflective water, with a limited cohesive game-era palette "
+        "and readable pixel shading. One tiny animal may appear as a subtle environmental discovery, "
+        "never a focal point. It must look hand-crafted pixel by pixel, not filtered artwork."
     ),
     "aesthetic": (
-        "Beautiful, richly detailed 16-bit pixel art scenery with refined environmental composition, "
-        "layered natural depth, intricate cottages or landscape details, soft atmospheric light "
-        "and polished premium retro game background art. Avoid abstract poster-like designs."
+        "Authentic 16-bit pixel-art game scenery, with clearly visible square pixels, chunky deliberate "
+        "pixel clusters, stepped outlines and block-built environmental details. Layered natural depth, "
+        "small cottages and landscape details, restrained limited palette and carefully grouped pixel shading. "
+        "Polished classic retro RPG background art, never abstract poster art or painterly illustration."
     ),
 }
 
@@ -148,9 +151,13 @@ def build_prompt(
         f"Season: {season_phrase}. Weather: {weather_phrase}. Time: {time_phrase}. "
         "Vertical 9:16 smartphone wallpaper composition. "
         "Scenery should occupy approximately 80 to 90 percent of the image. "
-        "Use crisp, deliberate 16-bit pixel clusters with fine environmental detail, "
-        "beautiful natural color transitions and a balanced, immersive composition; "
-        "not photorealistic, not 3D, not smooth vector art, not chibi, not childish cartoon. "
+        "Make the pixel structure unmistakable: visible square pixels at a consistent medium-to-large scale, "
+        "chunky grouped pixel clusters, stepped diagonal edges, simplified block-shaped foliage and rocks, "
+        "pixel-by-pixel highlights and shadows, and a limited cohesive 16-bit palette. "
+        "Avoid tiny noisy dithering and avoid smooth gradients. Absolutely no anti-aliasing, "
+        "blur, painterly brushwork, watercolor texture, or smooth digital illustration. "
+        "It must look like an authentic classic 16-bit RPG game screenshot, not a normal image with a pixel filter; "
+        "not photorealistic, not 3D, not vector art, not chibi, not childish cartoon. "
         "Keep the upper area visually calm enough for the phone clock and notifications. "
         "No large characters, no close-up animals, no text, no letters, no watermark, "
         "no logo, no border, no frame."
