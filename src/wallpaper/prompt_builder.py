@@ -261,9 +261,9 @@ def build_prompt(
         if condition == "rain" and slot == "night":
             subject += "Rainy night atmosphere. "
         if condition == "snow":
-            subject += "Gentle snowfall. "
+            subject += "gentle snowfall. "
         if season == "winter":
-            subject += "Winter scenery details. "
+            subject += "winter scenery details. "
     else:
         subject += "Keep the selected setting coherent; do not force outdoor weather into an indoor, underwater or space scene. "
     if theme_name == "cozy_room":
@@ -282,7 +282,7 @@ def build_prompt(
     return (
         f"{STYLES[style_name]} {subject}"
         "16-bit pixel art. Vertical 9:16 smartphone wallpaper, immersive environment, scenery-led composition. "
-        "Scenery should occupy 80 to 90 percent of the frame. No large characters. "
+        "Scenery should occupy 80 to 90 percent of the frame. no large characters. "
         "Keep the upper area visually calm for the phone clock and notifications. "
         "Use crisp small-to-medium square pixels, precise clusters, clean stepped edges, pixel-by-pixel highlights "
         "and shadows, nuanced lighting, intricate materials and premium classic 16-bit RPG game-art finish. "
