@@ -30,7 +30,7 @@ on:
       theme:
         description: "테스트할 장면 테마"
         type: choice
-        options: [auto, city, cyberpunk, cozy_room, toy_village, spirit_realm, cosmic, fantasy, underwater, steampunk, desert, snow_globe, nature, night_market, seaside_harbor, magic_library, retro_arcade, countryside_station, sky_islands, storybook_village, onsen_town]
+        options: [auto, nature, city, cyberpunk, cozy_room, toy_village, spirit_realm, cosmic, fantasy, underwater, steampunk, desert, snow_globe, night_market, seaside_harbor, magic_library, retro_arcade, countryside_station, sky_islands, storybook_village, onsen_town, floating_city, botanical_dome, aquarium_tunnel, mountain_cablecar, festival, canal_city, lighthouse_coast, enchanted_greenhouse, mushroom_realm, clockwork_station, space_colony, arcane_academy, coastal_cliffs, waterfall_grotto, desert_caravan, medieval_port, winter_village, cloud_cafe, mechanical_garden, dream_train, abandoned_ruins, rainy_alley, harbor_festival, miniature_world]
         default: auto
 
 concurrency:
