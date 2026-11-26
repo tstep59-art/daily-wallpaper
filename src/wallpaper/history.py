@@ -12,7 +12,7 @@ HISTORY_KEY = "recent_spot_ids"
 STYLE_KEY = "previous_style"
 THEME_KEY = "previous_theme"
 RECENT_THEMES_KEY = "recent_themes"
-THEME_HISTORY_LIMIT = 10
+THEME_HISTORY_LIMIT = 1
 
 
 def fetch_history(url: str | None, get=requests.get, timeout: int = 10) -> dict:
