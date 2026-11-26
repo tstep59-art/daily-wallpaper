@@ -111,6 +111,7 @@ def run(
     recent = previous.get(history.HISTORY_KEY, [])
     previous_style = previous.get(history.STYLE_KEY)
     previous_theme = previous.get(history.THEME_KEY)
+    recent_themes = previous.get(history.RECENT_THEMES_KEY, [])
 
     spot = spot_selector.choose_spot(spots, recent, rng)
     seed = rng.randrange(_SEED_LIMIT)
@@ -129,6 +130,7 @@ def run(
         previous_style=previous_style,
         rng=rng,
         previous_theme=previous_theme,
+        recent_themes=recent_themes,
         theme_override=theme_override,
         hour=now.hour,
     )
@@ -196,6 +198,10 @@ def run(
             "theme": theme,
             history.STYLE_KEY: style,
             history.THEME_KEY: theme,
+            history.RECENT_THEMES_KEY: (
+                history.record_theme(recent_themes, theme)
+                if theme else recent_themes[:history.THEME_HISTORY_LIMIT]
+            ),
             "season": season,
             "weather": condition,
             "weather_latitude": settings.weather_latitude,
