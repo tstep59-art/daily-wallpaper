@@ -194,7 +194,7 @@ INDOOR_THEMES = {
 }
 WEATHER_SENSITIVE_THEMES = set(THEMES) - INDOOR_THEMES - {"cosmic", "space_colony", "underwater"}
 
-THEME_HISTORY_LIMIT = 10
+THEME_HISTORY_LIMIT = 1
 
 
 def choose_theme(
@@ -202,7 +202,7 @@ def choose_theme(
     rng=None,
     recent_themes: list[str] | None = None,
 ) -> str:
-    """Choose a theme while avoiding the ten most recently generated themes."""
+    """Choose a theme while avoiding the immediately previous theme."""
     rng = rng or random
     avoided = set((recent_themes or [])[:THEME_HISTORY_LIMIT])
     if previous_theme:
