@@ -194,9 +194,22 @@ INDOOR_THEMES = {
 }
 WEATHER_SENSITIVE_THEMES = set(THEMES) - INDOOR_THEMES - {"cosmic", "space_colony", "underwater"}
 
-def choose_theme(previous_theme: str | None = None, rng=None) -> str:
+THEME_HISTORY_LIMIT = 10
+
+
+def choose_theme(
+    previous_theme: str | None = None,
+    rng=None,
+    recent_themes: list[str] | None = None,
+) -> str:
+    """Choose a theme while avoiding the ten most recently generated themes."""
     rng = rng or random
-    choices = [theme for theme in THEMES if theme != previous_theme]
+    avoided = set((recent_themes or [])[:THEME_HISTORY_LIMIT])
+    if previous_theme:
+        avoided.add(previous_theme)
+    choices = [theme for theme in THEMES if theme not in avoided]
+    if not choices:
+        choices = [theme for theme in THEMES if theme != previous_theme]
     return rng.choice(choices)
 
 def season_of(day: date) -> str:
@@ -231,12 +244,13 @@ def build_prompt(
     previous_style: str | None = None,
     rng=None,
     previous_theme: str | None = None,
+    recent_themes: list[str] | None = None,
     theme_override: str | None = None,
     hour: int | None = None,
 ) -> str:
     rng = rng or random
     style_name = choose_style(previous_style, rng)
-    theme_name = theme_override or choose_theme(previous_theme, rng)
+    theme_name = theme_override or choose_theme(previous_theme, rng, recent_themes)
     if theme_name not in THEMES:
         raise ValueError(f"unknown theme: {theme_name!r}")
     if slot not in ("day", "night"):
