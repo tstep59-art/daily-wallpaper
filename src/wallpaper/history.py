@@ -11,6 +11,8 @@ logger = logging.getLogger(__name__)
 HISTORY_KEY = "recent_spot_ids"
 STYLE_KEY = "previous_style"
 THEME_KEY = "previous_theme"
+RECENT_THEMES_KEY = "recent_themes"
+THEME_HISTORY_LIMIT = 10
 
 
 def fetch_history(url: str | None, get=requests.get, timeout: int = 10) -> dict:
@@ -31,6 +33,7 @@ def fetch_history(url: str | None, get=requests.get, timeout: int = 10) -> dict:
         recent = data.get(HISTORY_KEY, [])
         style = data.get(STYLE_KEY)
         theme = data.get(THEME_KEY)
+        recent_themes = data.get(RECENT_THEMES_KEY, [])
 
         if not isinstance(recent, list) or not all(
             isinstance(item, str) for item in recent
@@ -41,11 +44,16 @@ def fetch_history(url: str | None, get=requests.get, timeout: int = 10) -> dict:
             raise TypeError(f"{STYLE_KEY} is not a string")
         if theme is not None and not isinstance(theme, str):
             raise TypeError(f"{THEME_KEY} is not a string")
+        if not isinstance(recent_themes, list) or not all(
+            isinstance(item, str) for item in recent_themes
+        ):
+            raise TypeError(f"{RECENT_THEMES_KEY} is not a list of strings")
 
         return {
             HISTORY_KEY: recent,
             STYLE_KEY: style,
             THEME_KEY: theme,
+            RECENT_THEMES_KEY: recent_themes[:THEME_HISTORY_LIMIT],
         }
 
     except (requests.RequestException, KeyError, TypeError, ValueError) as exc:
@@ -64,3 +72,9 @@ def fetch_recent_ids(url: str, get=requests.get, timeout: int = 10) -> list[str]
 def record(recent: list[str], spot_id: str, limit: int) -> list[str]:
     """Record the newest spot without duplicates."""
     return [spot_id, *(item for item in recent if item != spot_id)][:limit]
+
+
+
+def record_theme(recent: list[str], theme: str, limit: int = THEME_HISTORY_LIMIT) -> list[str]:
+    """Record the newest theme and retain a bounded, duplicate-free history."""
+    return [theme, *(item for item in recent if item != theme)][:limit]
